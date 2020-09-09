@@ -1,6 +1,6 @@
-// +build etcd
+// +build etcds
 
-package etcd
+package etcds
 
 // etcd needs to be running on http://localhost:2379
 

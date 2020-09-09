@@ -1,8 +1,7 @@
-package etcd
+package etcds
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/coredns/coredns/plugin"
 	"github.com/coredns/coredns/request"
@@ -12,10 +11,12 @@ import (
 
 // ServeDNS implements the plugin.Handler interface.
 func (e *Etcd) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg) (int, error) {
-	fmt.Println("etcds ServeDNS")
+
 	opt := plugin.Options{}
 
 	state := request.Request{W: w, Req: r}
+
+	log.Debugf("ServeDNS:%s", state.Name())
 
 	zone := plugin.Zones(e.Zones).Matches(state.Name())
 	if zone == "" {
@@ -47,7 +48,9 @@ func (e *Etcd) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg) (
 	case dns.TypeNS:
 		if dns.IsSubDomain(zone, state.Name()) {
 			records, extra, err = plugin.NS(ctx, e, state.Name(), state, opt)
-			break
+			if len(records) > 0 {
+				break
+			}
 		}
 		fallthrough
 	default:

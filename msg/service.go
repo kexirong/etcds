@@ -5,8 +5,11 @@ import (
 	"net"
 	"strings"
 
+	clog "github.com/coredns/coredns/plugin/pkg/log"
 	"github.com/miekg/dns"
 )
+
+var log = clog.NewWithPlugin("etcds_msg")
 
 // Service defines a discoverable service in etcd. It is the rdata from a SRV
 // record, but with a twist.  Host (Target in SRV) must be a domain name, but
@@ -89,6 +92,7 @@ func (s *Service) NewNS(name string) *dns.NS {
 	if s.TargetStrip > 0 {
 		host = targetStrip(host, s.TargetStrip)
 	}
+	log.Debugf("NewNS, name: %s, host: %s", name, host)
 	return &dns.NS{Hdr: dns.RR_Header{Name: name, Rrtype: dns.TypeNS, Class: dns.ClassINET, Ttl: s.TTL}, Ns: host}
 }
 

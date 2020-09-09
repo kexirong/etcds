@@ -1,6 +1,6 @@
-// +build etcd
+// +build etcds
 
-package etcd
+package etcds
 
 import (
 	"context"

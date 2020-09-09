@@ -1,4 +1,4 @@
-package etcd
+package etcds
 
 import (
 	"crypto/tls"
@@ -6,12 +6,16 @@ import (
 
 	"github.com/coredns/coredns/core/dnsserver"
 	"github.com/coredns/coredns/plugin"
+	clog "github.com/coredns/coredns/plugin/pkg/log"
 	mwtls "github.com/coredns/coredns/plugin/pkg/tls"
 	"github.com/coredns/coredns/plugin/pkg/upstream"
 
 	"github.com/caddyserver/caddy"
+
 	etcdcv3 "go.etcd.io/etcd/clientv3"
 )
+
+var log = clog.NewWithPlugin("etcds")
 
 func init() { plugin.Register("etcds", setup) }
 
