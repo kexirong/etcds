@@ -61,7 +61,7 @@ func (e *Etcd) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg) (
 		_, err = plugin.A(ctx, e, zone, state, nil, opt)
 
 	}
-	log.Infof("end switch err: %s", err.Error)
+	log.Infof("end switch err: %s", err.Error())
 	if err != nil && e.IsNameError(err) {
 		if e.Fall.Through(state.Name()) {
 			return plugin.NextOrFailure(e.Name(), e.Next, ctx, w, r)
