@@ -2,7 +2,6 @@ package etcds
 
 import (
 	"crypto/tls"
-	"fmt"
 
 	"github.com/coredns/coredns/core/dnsserver"
 	"github.com/coredns/coredns/plugin"
@@ -104,7 +103,8 @@ func etcdParse(c *caddy.Controller) (*Etcd, error) {
 		}
 		etc.Client = client
 		etc.endpoints = endpoints
-		fmt.Println("etc.PathPrefix: ", etc.PathPrefix)
+		log.Debugf("etc.PathPrefix: ", etc.PathPrefix)
+		log.Infof("etc.endpoints: ", etc.endpoints)
 		return &etc, nil
 
 	}
