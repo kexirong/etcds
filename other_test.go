@@ -1,8 +1,8 @@
-// +build etcd
+// +build etcds
 
 // tests mx and txt records
 
-package etcd
+package etcds
 
 import (
 	"fmt"

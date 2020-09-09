@@ -1,4 +1,4 @@
-package etcd
+package etcds
 
 import (
 	"context"
@@ -47,7 +47,10 @@ func (e *Etcd) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg) (
 	case dns.TypeNS:
 		if dns.IsSubDomain(zone, state.Name()) {
 			records, extra, err = plugin.NS(ctx, e, state.Name(), state, opt)
-			break
+			if len(records) != 0 {
+				break
+			}
+
 		}
 		fallthrough
 	default:

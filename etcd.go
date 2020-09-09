@@ -1,5 +1,5 @@
-// Package etcd provides the etcd version 3 backend plugin.
-package etcd
+// Package etcds provides the etcd version 3 backend plugin.
+package etcds
 
 import (
 	"context"
