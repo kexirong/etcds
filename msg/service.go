@@ -92,7 +92,6 @@ func (s *Service) NewNS(name string) *dns.NS {
 	if s.TargetStrip > 0 {
 		host = targetStrip(host, s.TargetStrip)
 	}
-	log.Infof("NewNS, name: %s, host: %s", name, host)
 	return &dns.NS{Hdr: dns.RR_Header{Name: name, Rrtype: dns.TypeNS, Class: dns.ClassINET, Ttl: s.TTL}, Ns: host}
 }
 

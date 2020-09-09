@@ -16,7 +16,7 @@ func (e *Etcd) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg) (
 
 	state := request.Request{W: w, Req: r}
 
-	log.Infof("ServeDNS:%s", state.Name())
+
 
 	zone := plugin.Zones(e.Zones).Matches(state.Name())
 	if zone == "" {
@@ -27,7 +27,7 @@ func (e *Etcd) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg) (
 		records, extra []dns.RR
 		err            error
 	)
-	log.Info("start switch ")
+
 	switch state.QType() {
 	case dns.TypeA:
 		records, err = plugin.A(ctx, e, zone, state, nil, opt)
@@ -46,28 +46,28 @@ func (e *Etcd) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg) (
 	case dns.TypeSOA:
 		records, err = plugin.SOA(ctx, e, zone, state, opt)
 	case dns.TypeNS:
-		if dns.IsSubDomain(zone, state.Name()) {
-			log.Infof("IsSubDomain: %s, %s", zone, state.Name())
-			records, extra, err = plugin.NS(ctx, e, state.Name(), state, opt)
+		// if dns.IsSubDomain(zone, state.Name()) {
+		// 	log.Infof("IsSubDomain: %s, %s", zone, state.Name())
+		// 	records, extra, err = plugin.NS(ctx, e, state.Name(), state, opt)
 
-			break
-
-			log.Infof("IsSubDomain: %d, %s", len(records), err.Error())
-
-		}
-		// if state.Name() == zone {
-		// 	records, extra, err = plugin.NS(ctx, e, zone, state, opt)
 		// 	break
+
+		// 	log.Infof("IsSubDomain: %d, %s", len(records), err.Error())
+
 		// }
+		if state.Name() == zone {
+			records, extra, err = plugin.NS(ctx, e, zone, state, opt)
+			break
+		}
 		fallthrough
 
 	default:
 		// Do a fake A lookup, so we can distinguish between NODATA and NXDOMAIN
-		log.Infof("case default: %s, %s", zone, state.Name())
+
 		_, err = plugin.A(ctx, e, zone, state, nil, opt)
 
 	}
-	log.Infof("end switch err: %s", err.Error())
+
 	if err != nil && e.IsNameError(err) {
 		if e.Fall.Through(state.Name()) {
 			return plugin.NextOrFailure(e.Name(), e.Next, ctx, w, r)
@@ -82,7 +82,7 @@ func (e *Etcd) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg) (
 	if len(records) == 0 {
 		return plugin.BackendError(ctx, e, zone, dns.RcodeSuccess, state, err, opt)
 	}
-	log.Infof("ServeDNS write ")
+
 	m := new(dns.Msg)
 	m.SetReply(r)
 	m.Authoritative = true
