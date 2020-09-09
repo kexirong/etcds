@@ -46,19 +46,19 @@ func (e *Etcd) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg) (
 	case dns.TypeSOA:
 		records, err = plugin.SOA(ctx, e, zone, state, opt)
 	case dns.TypeNS:
-		// if dns.IsSubDomain(zone, state.Name()) {
-		// 	log.Infof("IsSubDomain: %s, %s", zone, state.Name())
-		// 	records, extra, err = plugin.NS(ctx, e, state.Name(), state, opt)
-		// 	if len(records) > 0 {
-		// 		break
-		// 	}
-		// 	log.Infof("IsSubDomain: %d, %s", len(records), err.Error())
+		if dns.IsSubDomain(zone, state.Name()) {
+			log.Infof("IsSubDomain: %s, %s", zone, state.Name())
+			records, extra, err = plugin.NS(ctx, e, state.Name(), state, opt)
 
-		// }
-		if state.Name() == zone {
-			records, extra, err = plugin.NS(ctx, e, zone, state, opt)
 			break
+
+			log.Infof("IsSubDomain: %d, %s", len(records), err.Error())
+
 		}
+		// if state.Name() == zone {
+		// 	records, extra, err = plugin.NS(ctx, e, zone, state, opt)
+		// 	break
+		// }
 		fallthrough
 
 	default:
