@@ -103,8 +103,8 @@ func etcdParse(c *caddy.Controller) (*Etcd, error) {
 		}
 		etc.Client = client
 		etc.endpoints = endpoints
-		log.Debugf("etc.PathPrefix: ", etc.PathPrefix)
-		log.Infof("etc.endpoints: ", etc.endpoints)
+		log.Infof("etc.PathPrefix: %s", etc.PathPrefix)
+		log.Infof("etc.endpoints: %v", etc.endpoints)
 		return &etc, nil
 
 	}

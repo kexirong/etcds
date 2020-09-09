@@ -16,7 +16,7 @@ func (e *Etcd) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg) (
 
 	state := request.Request{W: w, Req: r}
 
-	log.Debugf("ServeDNS:%s", state.Name())
+	log.Infof("ServeDNS:%s", state.Name())
 
 	zone := plugin.Zones(e.Zones).Matches(state.Name())
 	if zone == "" {
