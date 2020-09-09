@@ -27,7 +27,7 @@ func (e *Etcd) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg) (
 		records, extra []dns.RR
 		err            error
 	)
-
+	log.Info("start switch ")
 	switch state.QType() {
 	case dns.TypeA:
 		records, err = plugin.A(ctx, e, zone, state, nil, opt)
@@ -52,15 +52,16 @@ func (e *Etcd) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg) (
 			if len(records) > 0 {
 				break
 			}
-			log.Infof("IsSubDomain: %s, %s", len(records), err.Error())
+			log.Infof("IsSubDomain: %d, %s", len(records), err.Error())
 		}
 		fallthrough
 	default:
 		// Do a fake A lookup, so we can distinguish between NODATA and NXDOMAIN
 		log.Infof("case default: %s, %s", zone, state.Name())
 		_, err = plugin.A(ctx, e, zone, state, nil, opt)
-		log.Infof("case default err: %s", err.Error())
+
 	}
+	log.Infof("end switch err: %s", err.Error)
 	if err != nil && e.IsNameError(err) {
 		if e.Fall.Through(state.Name()) {
 			return plugin.NextOrFailure(e.Name(), e.Next, ctx, w, r)
