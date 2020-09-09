@@ -48,16 +48,9 @@ func (e *Etcd) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg) (
 	case dns.TypeNS:
 		if dns.IsSubDomain(zone, state.Name()) {
 			records, extra, err = plugin.NS(ctx, e, state.Name(), state, opt)
-<<<<<<< HEAD
 			if len(records) > 0 {
 				break
 			}
-=======
-			if len(records) != 0 {
-				break
-			}
-
->>>>>>> 6b00e82dcc72c9304fcc81943aaf6970a4252a37
 		}
 		fallthrough
 	default:
