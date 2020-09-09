@@ -47,6 +47,7 @@ func (e *Etcd) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg) (
 		records, err = plugin.SOA(ctx, e, zone, state, opt)
 	case dns.TypeNS:
 		if dns.IsSubDomain(zone, state.Name()) {
+			log.Infof("IsSubDomain: %s, %s", zone, state.Name())
 			records, extra, err = plugin.NS(ctx, e, state.Name(), state, opt)
 			if len(records) > 0 {
 				break
@@ -55,6 +56,7 @@ func (e *Etcd) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg) (
 		fallthrough
 	default:
 		// Do a fake A lookup, so we can distinguish between NODATA and NXDOMAIN
+		log.Infof("case default: %s, %s", zone, state.Name())
 		_, err = plugin.A(ctx, e, zone, state, nil, opt)
 	}
 	if err != nil && e.IsNameError(err) {
@@ -71,7 +73,7 @@ func (e *Etcd) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg) (
 	if len(records) == 0 {
 		return plugin.BackendError(ctx, e, zone, dns.RcodeSuccess, state, err, opt)
 	}
-
+	log.Infof("ServeDNS write ")
 	m := new(dns.Msg)
 	m.SetReply(r)
 	m.Authoritative = true
