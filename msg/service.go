@@ -5,11 +5,8 @@ import (
 	"net"
 	"strings"
 
-	clog "github.com/coredns/coredns/plugin/pkg/log"
 	"github.com/miekg/dns"
 )
-
-var log = clog.NewWithPlugin("etcds_msg")
 
 // Service defines a discoverable service in etcd. It is the rdata from a SRV
 // record, but with a twist.  Host (Target in SRV) must be a domain name, but
